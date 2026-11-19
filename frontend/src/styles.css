@@ -1,3 +1,5 @@
 * { box-sizing: border-box; }
 html, body { min-height: 100%; margin: 0; background: #f7f8fc; }
 body { min-width: 320px; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
