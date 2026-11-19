@@ -11,7 +11,12 @@ public class PermissionEvaluator {
         if (authentication == null || !authentication.isAuthenticated() || associationId == null) return false;
         Object principal = authentication.getPrincipal();
         if (!(principal instanceof CustomUserDetails user)) return false;
-        return "ADMIN".equals(user.getRole()) || associationId.equals(user.getAssociationId());
+
+        // Ordinary members are not association administrators. Until member-specific
+        // resource permissions exist, only administrators can use association APIs.
+        if ("ADMIN".equals(user.getRole())) return true;
+        return "ASSOCIATION_ADMIN".equals(user.getRole())
+                && associationId.equals(user.getAssociationId());
     }
 
     public boolean isAdmin(Authentication authentication) {

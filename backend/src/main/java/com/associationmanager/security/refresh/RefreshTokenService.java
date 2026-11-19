@@ -36,9 +36,17 @@ public class RefreshTokenService {
 
     @Transactional
     public CustomUserDetails rotate(String rawToken) {
-        RefreshToken token = tokens.findByTokenHashAndRevokedAtIsNullAndExpiresAtAfter(hash(rawToken), OffsetDateTime.now())
-                .orElseThrow(() -> new InvalidRefreshTokenException());
-        token.revoke();
+        OffsetDateTime now = OffsetDateTime.now();
+        String tokenHash = hash(rawToken);
+        RefreshToken token = tokens.findByTokenHashAndRevokedAtIsNullAndExpiresAtAfter(tokenHash, now)
+                .orElseThrow(InvalidRefreshTokenException::new);
+
+        // A conditional database update makes token consumption atomic: concurrent
+        // requests using the same refresh token can have only one successful rotation.
+        if (tokens.revokeIfActive(tokenHash, now) != 1) {
+            throw new InvalidRefreshTokenException();
+        }
+
         CustomUserDetails user = users.findById(token.getUserId())
                 .orElseThrow(InvalidRefreshTokenException::new);
         if (!user.isEnabled()) throw new InvalidRefreshTokenException();
