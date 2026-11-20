@@ -1,10 +1,12 @@
 package com.associationmanager.membership;
 
+import com.associationmanager.security.authorization.SecurityExpressions;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +24,8 @@ public class MemberController {
     public MemberController(MemberService service) { this.service = service; }
 
     @PostMapping
-    public ResponseEntity<MemberResponse> create(@PathVariable UUID associationId,
+    @PreAuthorize("@securityExpressions.canAccessAssociation(#associationId, authentication)")
+    public ResponseEntity<MemberResponse> create(@PathVariable("associationId") UUID associationId,
                                                   @Valid @RequestBody MemberRequest request) {
         MemberResponse created = service.create(associationId, request);
         return ResponseEntity.created(URI.create("/api/v1/associations/" + associationId
@@ -30,23 +33,30 @@ public class MemberController {
     }
 
     @GetMapping
-    public List<MemberResponse> findAll(@PathVariable UUID associationId) {
+    @PreAuthorize("@securityExpressions.canAccessAssociation(#associationId, authentication)")
+    public List<MemberResponse> findAll(@PathVariable("associationId") UUID associationId) {
         return service.findAll(associationId);
     }
 
     @GetMapping("/{memberId}")
-    public MemberResponse findById(@PathVariable UUID associationId, @PathVariable UUID memberId) {
+    @PreAuthorize("@securityExpressions.canAccessAssociation(#associationId, authentication)")
+    public MemberResponse findById(@PathVariable("associationId") UUID associationId,
+                                   @PathVariable("memberId") UUID memberId) {
         return service.findById(associationId, memberId);
     }
 
     @PutMapping("/{memberId}")
-    public MemberResponse update(@PathVariable UUID associationId, @PathVariable UUID memberId,
+    @PreAuthorize("@securityExpressions.canAccessAssociation(#associationId, authentication)")
+    public MemberResponse update(@PathVariable("associationId") UUID associationId,
+                                 @PathVariable("memberId") UUID memberId,
                                  @Valid @RequestBody MemberRequest request) {
         return service.update(associationId, memberId, request);
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<Void> delete(@PathVariable UUID associationId, @PathVariable UUID memberId) {
+    @PreAuthorize("@securityExpressions.canAccessAssociation(#associationId, authentication)")
+    public ResponseEntity<Void> delete(@PathVariable("associationId") UUID associationId,
+                                       @PathVariable("memberId") UUID memberId) {
         service.delete(associationId, memberId);
         return ResponseEntity.noContent().build();
     }

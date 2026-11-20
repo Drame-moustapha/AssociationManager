@@ -24,4 +24,10 @@ class HealthControllerTest {
                 .andExpect(jsonPath("$.status").value("UP"))
                 .andExpect(jsonPath("$.application").value("AssociationManager"));
     }
+
+    @Test
+    void protectedApiRejectsUnauthenticatedRequests() throws Exception {
+        mockMvc.perform(get("/api/v1/associations"))
+                .andExpect(status().isUnauthorized());
+    }
 }
