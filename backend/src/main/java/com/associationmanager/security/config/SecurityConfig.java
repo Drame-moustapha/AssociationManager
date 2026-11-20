@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .exceptionHandling(errors -> errors.authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/auth/**", "/actuator/health").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/api/health", "/actuator/health").permitAll()
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

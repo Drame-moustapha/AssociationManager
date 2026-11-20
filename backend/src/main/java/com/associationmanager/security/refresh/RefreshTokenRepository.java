@@ -1,4 +1,4 @@
-package com.associationmanager.security/refresh;
+package com.associationmanager.security.refresh;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
