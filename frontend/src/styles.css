@@ -43,6 +43,9 @@ table td, table th { border-bottom-color: var(--color-border) !important; }
 .empty { color: var(--color-muted) !important; }
 .notice { border-color: #f0dfb1 !important; border-radius: 12px !important; background: #fff9e9 !important; }
 .dialog { border-radius: 18px !important; }
+.association-picker { display: grid; width: min(420px, 100%); gap: 6px; margin: -8px 0 16px; color: var(--color-muted); font-size: 11px; font-weight: 700; }
+.association-picker select { height: 40px; padding: 0 11px; background: #fff; color: var(--color-ink); }
+.retry { margin-left: 8px; border: 0; background: none; color: var(--color-primary); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
 
 @media (max-width: 640px) {
   .head, .heading { align-items: flex-start !important; gap: 14px !important; }

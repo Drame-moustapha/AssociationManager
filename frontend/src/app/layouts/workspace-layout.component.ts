@@ -26,7 +26,7 @@ import { NotificationService } from '../core/services/notification.service';
         <nav class="navigation">
           <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()"><span class="nav-icon">⌂</span>Vue d’ensemble</a>
           @if (isAdmin) { <a routerLink="/associations" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon">◈</span>Associations</a> }
-          <a routerLink="/members" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon">♙</span>Membres</a>
+          @if (canManageMembers) { <a routerLink="/members" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon">♙</span>Membres</a> }
           <a routerLink="/governance" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon">♧</span>Bureau & gouvernance</a>
           <a routerLink="/activities" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon">◷</span>Activités</a>
           <a routerLink="/meetings" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon">▦</span>Réunions</a>
@@ -76,6 +76,7 @@ export class WorkspaceLayoutComponent {
   get email(): string { return this.user?.email ?? ''; }
   get role(): BackendRole | undefined { return this.user?.role; }
   get isAdmin(): boolean { return this.role === 'ADMIN'; }
+  get canManageMembers(): boolean { return this.role === 'ADMIN' || this.role === 'ASSOCIATION_ADMIN'; }
   get roleLabel(): string { return ({ ADMIN: 'Administrateur', ASSOCIATION_ADMIN: 'Admin association', MEMBER: 'Membre' } as Record<string, string>)[this.role ?? 'MEMBER']; }
   get orgName(): string { return this.user?.associationId ? 'Mon association' : 'Administration'; }
   get orgInitial(): string { return this.orgName.charAt(0); }

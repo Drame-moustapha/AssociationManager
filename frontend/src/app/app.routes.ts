@@ -15,7 +15,7 @@ export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'associations', component: AssociationsComponent, canActivate: [roleGuard], data: { roles: ['ADMIN'] } },
-    { path: 'members', component: MembersComponent },
+    { path: 'members', component: MembersComponent, canActivate: [roleGuard], data: { roles: ['ADMIN', 'ASSOCIATION_ADMIN'] } },
     { path: 'activities', component: FeatureComponent, data: { title: 'Activités', description: 'Planifiez et suivez les activités de votre association.' } },
     { path: 'meetings', component: FeatureComponent, data: { title: 'Réunions', description: 'Consultez les réunions et leurs ordres du jour.' } },
     { path: 'finance', component: FeatureComponent, data: { title: 'Finances', description: 'Suivez les cotisations et les campagnes de collecte.' } },
